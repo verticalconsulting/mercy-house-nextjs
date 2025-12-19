@@ -1,4 +1,4 @@
-export default {
+const contentBlock = {
   name: 'contentBlock',
   title: 'Content Block',
   type: 'object',
@@ -71,7 +71,7 @@ export default {
       title: 'heading',
       layout: 'layout',
     },
-    prepare({ title, layout }: any) {
+    prepare({ title, layout }: { title?: string; layout?: string }) {
       return {
         title: title || 'Content Block',
         subtitle: layout || 'container',
@@ -79,3 +79,5 @@ export default {
     },
   },
 }
+
+export default contentBlock

@@ -1,4 +1,4 @@
-export default {
+const ctaSection = {
   name: 'ctaSection',
   title: 'CTA Section',
   type: 'object',
