@@ -24,7 +24,9 @@
       "Bash(git commit:*)",
       "Bash(git push:*)",
       "Bash(npx sanity:*)",
-      "WebSearch"
+      "WebSearch",
+      "WebFetch(domain:www.sanity.io)",
+      "Bash(tree:*)"
     ],
     "deny": [],
     "ask": []

@@ -74,13 +74,16 @@ SANITY_API_TOKEN=your_token_here  # For write operations if needed
 ## Troubleshooting
 
 ### Can't access Studio URL
+
 - Ensure you've run `npx sanity deploy`
 - Check that your project ID is correct in `sanity.config.ts`
 
 ### CORS errors when accessing Studio
+
 - Add CORS origins: `npx sanity cors add [your-studio-url] --credentials`
 
 ### Changes not showing in Next.js app
+
 - Check that content is **published** (not just draft) in Studio
 - Verify API token has correct permissions
 - Clear Next.js cache: `rm -rf .next && npm run build`
