@@ -1,4 +1,6 @@
-export default {
+import type { Rule } from 'sanity';
+
+const program = {
   name: 'program',
   title: 'Program',
   type: 'document',
@@ -7,7 +9,7 @@ export default {
       name: 'title',
       title: 'Program Name',
       type: 'string',
-      validation: (Rule: any) => Rule.required(),
+      validation: (Rule: Rule) => Rule.required(),
     },
     {
       name: 'slug',
@@ -17,7 +19,7 @@ export default {
         source: 'title',
         maxLength: 96,
       },
-      validation: (Rule: any) => Rule.required(),
+      validation: (Rule: Rule) => Rule.required(),
     },
     {
       name: 'programType',
@@ -25,13 +27,13 @@ export default {
       type: 'string',
       options: {
         list: [
-          { title: 'Men\'s Program', value: 'mens' },
-          { title: 'Women\'s Program', value: 'womens' },
+          { title: "Men's Program", value: 'mens' },
+          { title: "Women's Program", value: 'womens' },
           { title: 'Teen Program', value: 'teen' },
           { title: 'Family Program', value: 'family' },
         ],
       },
-      validation: (Rule: any) => Rule.required(),
+      validation: (Rule: Rule) => Rule.required(),
     },
     {
       name: 'description',
@@ -112,12 +114,14 @@ export default {
       programType: 'programType',
       media: 'image',
     },
-    prepare({ title, programType, media }: any) {
+    prepare({ title, programType, media }: { title: string; programType: string; media: any }) {
       return {
         title,
         subtitle: programType,
         media,
-      }
+      };
     },
   },
-}
+};
+
+export default program;

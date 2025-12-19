@@ -25,7 +25,7 @@ This application replaces the legacy WordPress site with a modern stack that pro
 
 ## Project Structure
 
-```
+```text
 mercy-house-nextjs/
 ├── app/                    # Next.js App Router
 │   ├── (site)/            # Public-facing pages

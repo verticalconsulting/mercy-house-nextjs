@@ -1,4 +1,6 @@
-export default {
+import { Rule } from 'sanity'
+
+const formConfig = {
   name: 'formConfig',
   title: 'Form Configuration',
   type: 'document',
@@ -8,14 +10,14 @@ export default {
       title: 'Form Name',
       type: 'string',
       description: 'Unique identifier for this form (e.g., "contact", "get-help", "donate-car")',
-      validation: (Rule: any) => Rule.required(),
+      validation: (Rule: Rule) => Rule.required(),
     },
     {
       name: 'displayName',
       title: 'Display Name',
       type: 'string',
       description: 'Human-readable name for this form',
-      validation: (Rule: any) => Rule.required(),
+      validation: (Rule: Rule) => Rule.required(),
     },
     {
       name: 'recipients',
@@ -23,7 +25,7 @@ export default {
       type: 'array',
       of: [{ type: 'string' }],
       description: 'Email addresses that will receive form submissions',
-      validation: (Rule: any) => Rule.required().min(1),
+      validation: (Rule: Rule) => Rule.required().min(1),
     },
     {
       name: 'successMessage',
@@ -31,7 +33,7 @@ export default {
       type: 'text',
       rows: 3,
       description: 'Message shown to users after successful submission',
-      validation: (Rule: any) => Rule.required(),
+      validation: (Rule: Rule) => Rule.required(),
     },
     {
       name: 'emailSubject',
@@ -52,14 +54,14 @@ export default {
       title: 'Google Sheet ID',
       type: 'string',
       description: 'The ID of the Google Sheet to send data to',
-      hidden: ({ parent }: any) => !parent?.enableGoogleSheets,
+      hidden: ({ parent }: { parent: { enableGoogleSheets?: boolean } }) => !parent?.enableGoogleSheets,
     },
     {
       name: 'googleSheetTab',
       title: 'Google Sheet Tab Name',
       type: 'string',
       description: 'The name of the tab/sheet within the Google Sheet',
-      hidden: ({ parent }: any) => !parent?.enableGoogleSheets,
+      hidden: ({ parent }: { parent: { enableGoogleSheets?: boolean } }) => !parent?.enableGoogleSheets,
     },
     {
       name: 'fields',
@@ -73,13 +75,13 @@ export default {
               name: 'name',
               title: 'Field Name',
               type: 'string',
-              validation: (Rule: any) => Rule.required(),
+              validation: (Rule: Rule) => Rule.required(),
             },
             {
               name: 'label',
               title: 'Field Label',
               type: 'string',
-              validation: (Rule: any) => Rule.required(),
+              validation: (Rule: Rule) => Rule.required(),
             },
             {
               name: 'type',
@@ -96,7 +98,7 @@ export default {
                   { title: 'Radio', value: 'radio' },
                 ],
               },
-              validation: (Rule: any) => Rule.required(),
+              validation: (Rule: Rule) => Rule.required(),
             },
             {
               name: 'required',
@@ -114,7 +116,7 @@ export default {
               title: 'Options (for select/radio)',
               type: 'array',
               of: [{ type: 'string' }],
-              hidden: ({ parent }: any) => !['select', 'radio'].includes(parent?.type),
+              hidden: ({ parent }: { parent: { type?: string } }) => !['select', 'radio'].includes(parent?.type ?? ''),
             },
           ],
         },
@@ -135,7 +137,7 @@ export default {
       active: 'active',
       recipientCount: 'recipients.length',
     },
-    prepare({ title, formName, active, recipientCount }: any) {
+    prepare({ title, formName, active, recipientCount }: { title: string; formName: string; active: boolean; recipientCount: number }) {
       return {
         title,
         subtitle: `${formName} | ${recipientCount} recipient${recipientCount !== 1 ? 's' : ''} | ${active ? 'Active' : 'Inactive'}`,
@@ -143,3 +145,5 @@ export default {
     },
   },
 }
+
+export default formConfig
