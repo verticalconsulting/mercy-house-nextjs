@@ -85,3 +85,5 @@ const ctaSection = {
     },
   },
 }
+
+export default ctaSection
