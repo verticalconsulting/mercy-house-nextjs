@@ -1,25 +1,68 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { client } from '@/sanity/lib/client'
 import { VideoHero } from '@/components/blocks/VideoHero'
 import { Button } from '@/components/ui/button'
 import { Heart, Users, Home, BookOpen, Phone, ArrowRight } from 'lucide-react'
 
-export const metadata: Metadata = {
-  title: 'Mercy House Adult & Teen Challenge - Faith-Based Recovery in Mississippi',
-  description: 'Transforming lives through Christ-centered addiction recovery programs. Residential treatment for men, women, and teens in Mississippi.',
-}
+// Query to fetch homepage data from Sanity
+const homePageQuery = `*[_type == "page" && slug.current == "home"][0] {
+  title,
+  pageBuilder[] {
+    _type,
+    _key,
+    _type == "videoHero" => {
+      heading,
+      subheading,
+      videoUrl,
+      posterImage,
+      overlayOpacity,
+      buttons[] {
+        _key,
+        text,
+        link,
+        style,
+        scrollToForm,
+        trackDonation
+      },
+      trustRow
+    },
+    _type == "contentBlock" => {
+      heading,
+      content,
+      layout
+    },
+    _type == "ctaSection" => {
+      heading,
+      description,
+      backgroundColor,
+      alignment,
+      buttons[] {
+        _key,
+        text,
+        link,
+        style,
+        trackDonation
+      }
+    },
+    _type == "faq" => {
+      heading,
+      description,
+      faqs[] {
+        _key,
+        question,
+        answer
+      }
+    }
+  },
+  seo {
+    metaTitle,
+    metaDescription,
+    metaKeywords
+  }
+}`
 
-// Mock data - in production, this would come from Sanity
-const heroData = {
-  heading: "Freedom from Addiction Through Faith",
-  subheading: "Christ-centered recovery programs for men, women, and teens in Mississippi",
-  videoUrl: "/videos/hero-background.mp4", // Placeholder
-  buttons: [
-    { text: "Get Help Now", link: "/get-help", style: "default" as const },
-    { text: "Donate", link: "https://givevirtuous.org/mercyhouse", style: "outline-white" as const, trackDonation: true },
-  ],
-}
-
+// Static programs data (not yet in Sanity)
 const programs = [
   {
     title: "Men's Program",
@@ -54,7 +97,32 @@ const stats = [
   { number: "24/7", label: "Support Available" },
 ]
 
-export default function HomePage() {
+export async function generateMetadata(): Promise<Metadata> {
+  const page = await client.fetch(homePageQuery)
+
+  return {
+    title: page?.seo?.metaTitle || 'Mercy House Adult & Teen Challenge - Faith-Based Recovery in Mississippi',
+    description: page?.seo?.metaDescription || 'Transforming lives through Christ-centered addiction recovery programs. Residential treatment for men, women, and teens in Mississippi.',
+  }
+}
+
+export default async function HomePage() {
+  const page = await client.fetch(homePageQuery)
+
+  // Find the video hero from pageBuilder
+  const videoHero = page?.pageBuilder?.find((block: any) => block._type === 'videoHero')
+
+  // Fallback if no data from Sanity
+  const heroData = videoHero || {
+    heading: "Freedom from Addiction Through Faith",
+    subheading: "Christ-centered recovery programs for men, women, and teens in Mississippi",
+    videoUrl: "/videos/hero-background.mp4",
+    buttons: [
+      { text: "Get Help Now", link: "/get-help", style: "default" as const },
+      { text: "Donate", link: "https://givevirtuous.org/mercyhouse", style: "outline-white" as const, trackDonation: true },
+    ],
+  }
+
   return (
     <>
       {/* Hero Section */}

@@ -128,7 +128,7 @@ export function VideoHero({
           )}
 
           {/* Trust Row */}
-          {trustRow.length > 0 && (
+          {trustRow && trustRow.length > 0 && (
             <div className="flex flex-wrap justify-center gap-6 text-sm uppercase tracking-wider opacity-80">
               {trustRow.map((item, index) => (
                 <span key={index} className="flex items-center">

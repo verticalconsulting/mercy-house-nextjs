@@ -16,7 +16,13 @@
       "mcp__Sanity__query_documents",
       "Bash(test:*)",
       "Bash(npm run seed:sanity:*)",
-      "mcp__Sanity__create_document_from_json"
+      "mcp__Sanity__create_document_from_json",
+      "mcp__Sanity__publish_document",
+      "Bash(npm run dev:*)",
+      "Bash(rm:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)"
     ],
     "deny": [],
     "ask": []

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { client } from '@/sanity/lib/client'
 import { VideoHero } from '@/components/blocks/VideoHero'
 import { ThreeStepProcess } from '@/components/blocks/ThreeStepProcess'
 import { WhyMercyHouse } from '@/components/blocks/WhyMercyHouse'
@@ -6,33 +7,64 @@ import { VehicleDonationForm } from '@/components/forms/VehicleDonationForm'
 import { FAQ } from '@/components/blocks/FAQ'
 import { StickyMobileCTA } from '@/components/blocks/StickyMobileCTA'
 
-export const metadata: Metadata = {
-  title: 'Donate Your Car - Mercy House Adult & Teen Challenge',
-  description: 'Donate your car to support recovery programs in Mississippi. Free pickup, fast tax receipt, and your donation directly funds life transformation.',
-  keywords: 'car donation, vehicle donation, Mississippi charity, tax deductible donation, free towing',
-  openGraph: {
-    title: 'Donate Your Car. Change a Life in Mississippi.',
-    description: 'Free pickup. Fast tax receipt. Your vehicle donation funds recovery and rehabilitation programs.',
-    url: 'https://mercyhouseatc.com/donate-a-car',
-    type: 'website',
+// Query to fetch donate-a-car page data from Sanity
+const donateCarPageQuery = `*[_type == "page" && slug.current == "donate-a-car"][0] {
+  title,
+  pageBuilder[] {
+    _type,
+    _key,
+    _type == "videoHero" => {
+      heading,
+      subheading,
+      videoUrl,
+      posterImage,
+      overlayOpacity,
+      buttons[] {
+        _key,
+        text,
+        link,
+        style,
+        scrollToForm,
+        trackDonation
+      },
+      trustRow
+    },
+    _type == "contentBlock" => {
+      heading,
+      content,
+      layout
+    },
+    _type == "faq" => {
+      heading,
+      description,
+      faqs[] {
+        _key,
+        question,
+        answer
+      }
+    },
+    _type == "ctaSection" => {
+      heading,
+      description,
+      backgroundColor,
+      alignment,
+      buttons[] {
+        _key,
+        text,
+        link,
+        style,
+        trackDonation
+      }
+    }
   },
-}
+  seo {
+    metaTitle,
+    metaDescription,
+    metaKeywords
+  }
+}`
 
-// Mock data - in production, this would come from Sanity
-const heroData = {
-  heading: "Donate Your Car. Change a Life in Mississippi.",
-  subheading: "Free pickup. Fast tax receipt. Your donation funds recovery.",
-  videoUrl: "/videos/hero-background.mp4", // Placeholder
-  buttons: [
-    { text: "Start Your Donation", link: "#donation-form", scrollToForm: true },
-  ],
-  trustRow: [
-    "Tax-deductible",
-    "Free towing",
-    "Quick turnaround"
-  ]
-}
-
+// Fallback data for the 3-step process (could be added to Sanity later)
 const processSteps = [
   {
     number: "1",
@@ -51,34 +83,72 @@ const processSteps = [
   }
 ]
 
-const faqItems = [
-  {
-    question: "Do you provide free towing?",
-    answer: "Yes! We provide free towing throughout Mississippi. Once you submit your donation form, we'll contact you to schedule a pickup time that works for your schedule."
-  },
-  {
-    question: "What vehicles do you accept?",
-    answer: "We accept cars, trucks, SUVs, motorcycles, boats, and RVs. The vehicle doesn't need to be running - we'll take it in any condition."
-  },
-  {
-    question: "Do I need the title?",
-    answer: "In most cases, yes, you'll need the title to donate your vehicle. If you've lost your title, we can help guide you through the process of obtaining a duplicate from the DMV."
-  },
-  {
-    question: "How quickly will you pick up my vehicle?",
-    answer: "We typically schedule pickups within 2-3 business days of receiving your donation form. In some cases, we can arrange same-day or next-day pickup."
-  },
-  {
-    question: "Is my donation tax-deductible?",
-    answer: "Yes! Mercy House Adult & Teen Challenge is a 501(c)(3) nonprofit organization. You'll receive a tax receipt for your donation that you can use when filing your taxes."
-  },
-  {
-    question: "What happens to my donated vehicle?",
-    answer: "Donated vehicles are either sold at auction or recycled, with 100% of the proceeds going directly to support our recovery and rehabilitation programs in Mississippi."
-  }
-]
+export async function generateMetadata(): Promise<Metadata> {
+  const page = await client.fetch(donateCarPageQuery)
 
-export default function DonateCarPage() {
+  return {
+    title: page?.seo?.metaTitle || 'Donate Your Car - Mercy House Adult & Teen Challenge',
+    description: page?.seo?.metaDescription || 'Donate your car to support recovery programs in Mississippi. Free pickup, fast tax receipt, and your donation directly funds life transformation.',
+    keywords: page?.seo?.metaKeywords || 'car donation, vehicle donation, Mississippi charity, tax deductible donation, free towing',
+    openGraph: {
+      title: page?.seo?.metaTitle || 'Donate Your Car. Change a Life in Mississippi.',
+      description: page?.seo?.metaDescription || 'Free pickup. Fast tax receipt. Your vehicle donation funds recovery and rehabilitation programs.',
+      url: 'https://mercyhouseatc.com/donate-a-car',
+      type: 'website',
+    },
+  }
+}
+
+export default async function DonateCarPage() {
+  const page = await client.fetch(donateCarPageQuery)
+
+  // Find blocks from pageBuilder
+  const videoHero = page?.pageBuilder?.find((block: any) => block._type === 'videoHero')
+  const faqSection = page?.pageBuilder?.find((block: any) => block._type === 'faq')
+  const ctaSection = page?.pageBuilder?.find((block: any) => block._type === 'ctaSection')
+
+  // Fallback data if Sanity content is missing
+  const heroData = videoHero || {
+    heading: "Donate Your Car. Change a Life in Mississippi.",
+    subheading: "Free pickup. Fast tax receipt. Your donation funds recovery.",
+    videoUrl: "/videos/hero-background.mp4",
+    buttons: [
+      { text: "Start Your Donation", link: "#donation-form", scrollToForm: true },
+    ],
+    trustRow: [
+      "Tax-deductible",
+      "Free towing",
+      "Quick turnaround"
+    ]
+  }
+
+  const faqItems = faqSection?.faqs || [
+    {
+      question: "Do you provide free towing?",
+      answer: "Yes! We provide free towing throughout Mississippi. Once you submit your donation form, we'll contact you to schedule a pickup time that works for your schedule."
+    },
+    {
+      question: "What vehicles do you accept?",
+      answer: "We accept cars, trucks, SUVs, motorcycles, boats, and RVs. The vehicle doesn't need to be running - we'll take it in any condition."
+    },
+    {
+      question: "Do I need the title?",
+      answer: "In most cases, yes, you'll need the title to donate your vehicle. If you've lost your title, we can help guide you through the process of obtaining a duplicate from the DMV."
+    },
+    {
+      question: "How quickly will you pick up my vehicle?",
+      answer: "We typically schedule pickups within 2-3 business days of receiving your donation form. In some cases, we can arrange same-day or next-day pickup."
+    },
+    {
+      question: "Is my donation tax-deductible?",
+      answer: "Yes! Mercy House Adult & Teen Challenge is a 501(c)(3) nonprofit organization. You'll receive a tax receipt for your donation that you can use when filing your taxes."
+    },
+    {
+      question: "What happens to my donated vehicle?",
+      answer: "Donated vehicles are either sold at auction or recycled, with 100% of the proceeds going directly to support our recovery and rehabilitation programs in Mississippi."
+    }
+  ]
+
   return (
     <>
       {/* Video Hero Section */}
@@ -109,9 +179,11 @@ export default function DonateCarPage() {
       <section className="py-16">
         <div className="container max-w-4xl">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">Frequently Asked Questions</h2>
+            <h2 className="text-3xl font-bold mb-4">
+              {faqSection?.heading || 'Frequently Asked Questions'}
+            </h2>
             <p className="text-lg text-gray-600">
-              Everything you need to know about donating your vehicle
+              {faqSection?.description || 'Everything you need to know about donating your vehicle'}
             </p>
           </div>
           <FAQ items={faqItems} />
@@ -119,31 +191,63 @@ export default function DonateCarPage() {
       </section>
 
       {/* Final CTA Section */}
-      <section className="py-16 bg-primary text-white">
-        <div className="container text-center">
-          <h2 className="text-3xl font-bold mb-4">
-            Your Vehicle Can Change Lives
-          </h2>
-          <p className="text-xl mb-8 max-w-2xl mx-auto">
-            Every vehicle donated helps provide faith-based recovery services to men, women,
-            and teens struggling with addiction in Mississippi.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a
-              href="#donation-form"
-              className="inline-block px-8 py-3 bg-white text-primary font-semibold rounded-lg hover:bg-gray-100 transition"
-            >
-              Donate Your Vehicle
-            </a>
-            <a
-              href="tel:6018582256"
-              className="inline-block px-8 py-3 border-2 border-white text-white font-semibold rounded-lg hover:bg-white hover:text-primary transition"
-            >
-              Call (601) 858-2256
-            </a>
+      {ctaSection ? (
+        <section className={`py-16 ${
+          ctaSection.backgroundColor === 'primary' ? 'bg-primary text-white' :
+          ctaSection.backgroundColor === 'dark' ? 'bg-gray-900 text-white' :
+          ctaSection.backgroundColor === 'gray' ? 'bg-gray-50' : 'bg-white'
+        }`}>
+          <div className="container text-center">
+            <h2 className="text-3xl font-bold mb-4">
+              {ctaSection.heading}
+            </h2>
+            <p className="text-xl mb-8 max-w-2xl mx-auto">
+              {ctaSection.description}
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              {ctaSection.buttons?.map((button: any) => (
+                <a
+                  key={button._key}
+                  href={button.link}
+                  className={`inline-block px-8 py-3 font-semibold rounded-lg transition ${
+                    button.style === 'outline'
+                      ? 'border-2 border-white text-white hover:bg-white hover:text-primary'
+                      : 'bg-white text-primary hover:bg-gray-100'
+                  }`}
+                >
+                  {button.text}
+                </a>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      ) : (
+        <section className="py-16 bg-primary text-white">
+          <div className="container text-center">
+            <h2 className="text-3xl font-bold mb-4">
+              Your Vehicle Can Change Lives
+            </h2>
+            <p className="text-xl mb-8 max-w-2xl mx-auto">
+              Every vehicle donated helps provide faith-based recovery services to men, women,
+              and teens struggling with addiction in Mississippi.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <a
+                href="#donation-form"
+                className="inline-block px-8 py-3 bg-white text-primary font-semibold rounded-lg hover:bg-gray-100 transition"
+              >
+                Donate Your Vehicle
+              </a>
+              <a
+                href="tel:6018582256"
+                className="inline-block px-8 py-3 border-2 border-white text-white font-semibold rounded-lg hover:bg-white hover:text-primary transition"
+              >
+                Call (601) 858-2256
+              </a>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Sticky Mobile CTA */}
       <StickyMobileCTA
