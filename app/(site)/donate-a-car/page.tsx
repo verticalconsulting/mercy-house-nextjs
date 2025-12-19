@@ -103,9 +103,10 @@ export default async function DonateCarPage() {
   const page = await client.fetch(donateCarPageQuery)
 
   // Find blocks from pageBuilder
-  const videoHero = page?.pageBuilder?.find((block: any) => block._type === 'videoHero')
-  const faqSection = page?.pageBuilder?.find((block: any) => block._type === 'faq')
-  const ctaSection = page?.pageBuilder?.find((block: any) => block._type === 'ctaSection')
+  type PageBlock = { _type: string; [key: string]: unknown }
+  const videoHero = page?.pageBuilder?.find((block: PageBlock) => block._type === 'videoHero')
+  const faqSection = page?.pageBuilder?.find((block: PageBlock) => block._type === 'faq')
+  const ctaSection = page?.pageBuilder?.find((block: PageBlock) => block._type === 'ctaSection')
 
   // Fallback data if Sanity content is missing
   const heroData = videoHero || {
@@ -205,7 +206,7 @@ export default async function DonateCarPage() {
               {ctaSection.description}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              {ctaSection.buttons?.map((button: any) => (
+              {ctaSection.buttons?.map((button: { _key: string; link: string; text: string; style?: string }) => (
                 <a
                   key={button._key}
                   href={button.link}

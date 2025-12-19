@@ -110,7 +110,8 @@ export default async function HomePage() {
   const page = await client.fetch(homePageQuery)
 
   // Find the video hero from pageBuilder
-  const videoHero = page?.pageBuilder?.find((block: any) => block._type === 'videoHero')
+  type PageBlock = { _type: string; [key: string]: unknown }
+  const videoHero = page?.pageBuilder?.find((block: PageBlock) => block._type === 'videoHero')
 
   // Fallback if no data from Sanity
   const heroData = videoHero || {
