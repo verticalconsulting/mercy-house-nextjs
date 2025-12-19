@@ -123,7 +123,7 @@ The application includes a robust form system with:
    - Pickup scheduling
    - Tax receipt information
 
-### Adding a New Form
+### Adding a New Forms
 
 1. Create validation schema in `lib/validation/forms.ts`
 2. Build form component in `components/forms/`
