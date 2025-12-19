@@ -70,13 +70,12 @@ export function VideoHero({
       {/* Background Video */}
       <video
         ref={videoRef}
-        className="absolute inset-0 w-full h-full object-cover"
+        className="absolute inset-0 w-full h-full object-cover video-hero__video--grayscale"
         autoPlay
         muted
         loop
         playsInline
         poster={posterImage}
-        style={{ filter: 'grayscale(100%)' }}
       >
         <source src={videoUrl} type="video/mp4" />
         {/* Fallback for browsers that don't support video */}
@@ -85,8 +84,12 @@ export function VideoHero({
 
       {/* Overlay */}
       <div
-        className="absolute inset-0 bg-black"
-        style={{ opacity: overlayOpacity / 100 }}
+        className="absolute inset-0 bg-black video-hero__overlay"
+        style={{
+          // Use CSS variable for overlay opacity, fallback to 0.5
+          // This avoids inline style for opacity directly
+          ['--video-hero-overlay-opacity' as '--video-hero-overlay-opacity']: overlayOpacity / 100
+        }}
       />
 
       {/* Content */}
