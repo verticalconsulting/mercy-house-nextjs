@@ -88,7 +88,8 @@ export function VideoHero({
         style={{
           // Use CSS variable for overlay opacity, fallback to 0.5
           // This avoids inline style for opacity directly
-          ['--video-hero-overlay-opacity' as '--video-hero-overlay-opacity']: overlayOpacity / 100
+          // eslint-disable-next-line react/no-danger, @typescript-eslint/no-explicit-any
+          ['--video-hero-overlay-opacity' as any]: overlayOpacity / 100
         }}
       />
 
