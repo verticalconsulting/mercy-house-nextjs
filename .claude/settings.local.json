@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install)",
+      "Bash(npm install:*)",
+      "Read(//c/Users/ogDevOps/AppData/Local/npm-cache/_logs/**)",
+      "Bash(npm view:*)",
+      "Bash(npm run build:*)",
+      "mcp__Sanity__list_sanity_rules",
+      "mcp__Sanity__get_sanity_rules",
+      "mcp__Sanity__get_context",
+      "Bash(node:*)",
+      "Bash(npm uninstall:*)",
+      "mcp__Sanity__list_projects",
+      "mcp__Sanity__list_datasets"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
