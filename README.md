@@ -5,6 +5,7 @@ A modern, high-performance website for Mercy House Adult & Teen Challenge, built
 ## Overview
 
 This application replaces the legacy WordPress site with a modern stack that provides:
+
 - **5x faster page loads**
 - **Staff-editable content** through Sanity CMS
 - **Secure form handling** with zero data loss
@@ -57,28 +58,33 @@ mercy-house-nextjs/
 ### Installation
 
 1. Clone the repository:
+
 ```bash
 git clone https://github.com/your-org/mercy-house-nextjs.git
 cd mercy-house-nextjs
 ```
 
-2. Install dependencies:
+1. Install dependencies:
+
 ```bash
 npm install
 ```
 
-3. Set up environment variables:
+1. Set up environment variables:
+
 ```bash
 cp .env.local.example .env.local
 # Edit .env.local with your values
 ```
 
-4. Set up Sanity:
+1. Set up Sanity:
+
 ```bash
 npm create sanity@latest -- --project-id YOUR_PROJECT_ID --dataset production
 ```
 
-5. Run development server:
+1. Run development server:
+
 ```bash
 npm run dev
 ```
@@ -102,6 +108,7 @@ Required environment variables:
 ## Forms System
 
 The application includes a robust form system with:
+
 - **Zod validation** on both client and server
 - **Email notifications** to configured recipients
 - **Automatic welcome emails** to users
@@ -160,6 +167,7 @@ Access Sanity Studio at `/studio` (requires authentication).
 1. Connect GitHub repository to Vercel
 2. Configure environment variables in Vercel dashboard
 3. Deploy:
+
 ```bash
 vercel --prod
 ```
@@ -206,6 +214,7 @@ Configure form recipients in Sanity Studio under Form Configurations.
 ## Performance
 
 Target metrics (all green):
+
 - **Lighthouse Score**: 90+ across all categories
 - **First Contentful Paint**: < 1s
 - **Time to Interactive**: < 2s
@@ -251,9 +260,10 @@ Target metrics (all green):
 ## Support
 
 For technical support:
-- **Email**: tech@mercyhouseatc.com
+
+- **Email**: <tech@mercyhouseatc.com>
 - **Documentation**: `/docs` folder
-- **Sanity Support**: support@sanity.io
+- **Sanity Support**: <support@sanity.io>
 
 ## License
 
