@@ -114,7 +114,7 @@ const program = {
       programType: 'programType',
       media: 'image',
     },
-    prepare({ title, programType, media }: { title: string; programType: string; media: any }) {
+    prepare({ title, programType, media }: any) {
       return {
         title,
         subtitle: programType,

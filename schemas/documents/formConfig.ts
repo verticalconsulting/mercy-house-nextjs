@@ -137,7 +137,7 @@ const formConfig = {
       active: 'active',
       recipientCount: 'recipients.length',
     },
-    prepare({ title, formName, active, recipientCount }: { title: string; formName: string; active: boolean; recipientCount: number }) {
+    prepare({ title, formName, active, recipientCount }: any) {
       return {
         title,
         subtitle: `${formName} | ${recipientCount} recipient${recipientCount !== 1 ? 's' : ''} | ${active ? 'Active' : 'Inactive'}`,

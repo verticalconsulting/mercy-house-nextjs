@@ -71,7 +71,7 @@ const contentBlock = {
       title: 'heading',
       layout: 'layout',
     },
-    prepare({ title, layout }: { title?: string; layout?: string }) {
+    prepare({ title, layout }: any) {
       return {
         title: title || 'Content Block',
         subtitle: layout || 'container',

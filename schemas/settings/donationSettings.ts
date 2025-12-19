@@ -1,4 +1,6 @@
-export default {
+import { Rule } from 'sanity';
+
+const donationSettings = {
   name: 'donationSettings',
   title: 'Donation Settings',
   type: 'document',
@@ -8,7 +10,7 @@ export default {
       title: 'Primary Donation URL',
       type: 'url',
       description: 'Main donation link (e.g., givevirtuous.org)',
-      validation: (Rule: any) => Rule.required(),
+      validation: (Rule: Rule) => Rule.required(),
     },
     {
       name: 'donationButtons',
@@ -18,8 +20,8 @@ export default {
         {
           type: 'object',
           fields: [
-            { name: 'label', title: 'Button Label', type: 'string', validation: (Rule: any) => Rule.required() },
-            { name: 'url', title: 'Donation URL', type: 'url', validation: (Rule: any) => Rule.required() },
+            { name: 'label', title: 'Button Label', type: 'string', validation: (Rule: Rule) => Rule.required() },
+            { name: 'url', title: 'Donation URL', type: 'url', validation: (Rule: Rule) => Rule.required() },
             { name: 'description', title: 'Description', type: 'text', rows: 2 },
             {
               name: 'donationType',
@@ -109,3 +111,5 @@ export default {
     },
   },
 }
+
+export default donationSettings;
