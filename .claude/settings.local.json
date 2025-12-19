@@ -12,7 +12,11 @@
       "Bash(node:*)",
       "Bash(npm uninstall:*)",
       "mcp__Sanity__list_projects",
-      "mcp__Sanity__list_datasets"
+      "mcp__Sanity__list_datasets",
+      "mcp__Sanity__query_documents",
+      "Bash(test:*)",
+      "Bash(npm run seed:sanity:*)",
+      "mcp__Sanity__create_document_from_json"
     ],
     "deny": [],
     "ask": []
