@@ -26,7 +26,12 @@
       "Bash(npx sanity:*)",
       "WebSearch",
       "WebFetch(domain:www.sanity.io)",
-      "Bash(tree:*)"
+      "Bash(tree:*)",
+      "Bash(mkdir:*)",
+      "WebFetch(domain:sanitypress.dev)",
+      "WebFetch(domain:webbytemplate.com)",
+      "WebFetch(domain:adding-hearts.vercel.app)",
+      "WebFetch(domain:github.com)"
     ],
     "deny": [],
     "ask": []
